@@ -1,7 +1,7 @@
 import socket, threading, time
 from tkinter import Tk
 
-from grafics.Elements_manager import Window
+from grafics.Windows_manager import Window
 from model.Map import Map
 from model.Player import Player
 from netcode.DataContainer import DataContainer
@@ -9,12 +9,12 @@ from util.log import log
 
 
 def get_connect():
-    server_ip = ("192.168.1.13", 4040)
-    client_ip = ('192.168.1.14', 0)
+    server_ip = ("192.168.56.1", 4040)
+    client_ip = ('192.168.56.1', 0)
 
-    connect = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    connect.bind(client_ip)
-    return connect, server_ip
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind(client_ip)
+    return s, server_ip
 
 
 def init_graph():
@@ -29,13 +29,13 @@ def init_graph():
     return app, window
 
 
-def receving(name, sock, app):
+def run_receving(name, sock, app):
     print(f"Start reciving model data")
     while True:
         data, addr = sock.recvfrom(1024)
 
         data_dict = DataContainer().decontain_model(data.decode("utf-8"))
-        print(f"Get new model data: {data_dict}")
+        # print(f"Get new model data: {data_dict}")
 
         app.set_ball_coor(data_dict["ball_x"], data_dict["ball_y"])
         app.set_player_coor(True, data_dict["pl1_x"])
@@ -44,7 +44,7 @@ def receving(name, sock, app):
         time.sleep(0.05)
 
 
-def run_gui(connect, server_ip):
+def run_control(connect, server_ip):
     shutdown = False
     join = False
 
@@ -64,9 +64,9 @@ def run_gui(connect, server_ip):
     connect.close()
 
 
-connect, server_ip = get_connect()
+s, server_ip = get_connect()
 
 app, window = init_graph()
-threading.Thread(target=receving, args=("RecvThread", connect, app)).start()
-threading.Thread(target=run_gui, args=(connect, server_ip)).start()
+threading.Thread(target=run_receving, args=("RecvThread", s, app)).start()
+threading.Thread(target=run_control, args=(s, server_ip)).start()
 window.mainloop()

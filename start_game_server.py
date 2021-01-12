@@ -2,7 +2,7 @@ import threading
 import time
 from tkinter import Tk
 
-from grafics.Elements_manager import Window
+from grafics.Windows_manager import Window
 from model.Model import Model, Player
 from model.Map import Map
 from model.Ball import Ball
@@ -24,12 +24,12 @@ app = Window(map, player1, player2, window)
 log("start main loop")
 
 
-def run_server(model, name):
+def run_server(model, name):   #отримання координатних даних, які змінюються
     server = Server()
     server.run(model)
 
 
-def run_model():
+def run_model():  #рух м'ячика
     log("start model loop")
     model.run()
 

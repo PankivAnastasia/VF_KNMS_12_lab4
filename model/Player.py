@@ -26,6 +26,7 @@ class Player(object):
 
     def get_coor(self):
         coord = []
-        for x in range(self.start_coor_x, self.size + self.start_coor_x):
+        start_coor = self.start_coor_x
+        for x in range(start_coor, self.size + self.start_coor_x):
             coord.append((x, self.start_coor_y))
         return coord

@@ -8,7 +8,7 @@ from util.log import log
 
 
 class Model(object):
-    def __init__(self, ball: Ball, map: Map, player1: Player, player2: Player, speed=50) -> None:
+    def __init__(self, ball: Ball, map: Map, player1: Player, player2: Player, speed=50):
         self.speed = speed
         log("creating model")
         self.ball = ball
@@ -27,14 +27,14 @@ class Model(object):
         log('start model')
         while True:
             time.sleep(1 / self.speed)
-            self.ball.next_step()
+            self.ball.next_step() #відбивання від стінок
 
-            if self.is_mirror():
+            if self.is_mirror():  #відбивання від платформи
                 log("is mirror")
                 self.__manage_mirror()
                 continue
 
-            if self.__is_end():
+            if self.__is_end(): #програш
                 log("is end")
                 self.__manage_end()
                 continue
